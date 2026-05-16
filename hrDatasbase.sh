@@ -55,13 +55,7 @@ while [ $ACTIVE == "true" ]; do
         echo "$LINEBREAK"
         echo "HR Main Menu"
         echo "$LINEBREAK"
-        echo "
-        1) Add / Remove Employee
-        2) Modify Employee
-        3) Search Employee
-        4) View Action Log
-        5) Logout
-        6) Exit"
+        echo -e "1) Add / Remove Employee\n2) Modify Employee\n3) Search Employee\n4) View Action Log\n5) Logout\n6) Exit"
         echo "$LINEBREAK"
         read -p "Please select an option: " MENUP
         if [ $MENUP == 5 ]; then
@@ -76,9 +70,7 @@ while [ $ACTIVE == "true" ]; do
         echo "$LINEBREAK"
         echo "Add / Remove Employee Menu"
         echo "$LINEBREAK"
-        echo "1) Add Employee
-        2) Remove Employee
-        3) Back to Main Menu"
+        echo -e "1) Add Employee\n2) Remove Employee\n3) Back to Main Menu"
         echo "$LINEBREAK"
         read -p "Please select an option: " MENUP2
 
@@ -104,6 +96,7 @@ while [ $ACTIVE == "true" ]; do
         elif [ $MENUP2 == 3 ]; then
             MENUP=0
         fi
+        
     elif [ $MENUP == 2 ]; then
         # code to modify employee information
         echo "$LINEBREAK"
@@ -112,7 +105,7 @@ while [ $ACTIVE == "true" ]; do
         # search for employee and then prompt for new information
         read -p "Enter employee's name: " MODIFYNAME
         echo "Enter new information for $MODIFYNAME:"
-
+        MENUP=0
     elif [ $MENUP == 3 ]; then
         # code to search employee information
         echo "$LINEBREAK"
@@ -120,22 +113,20 @@ while [ $ACTIVE == "true" ]; do
         echo "$LINEBREAK"
         read -p "Enter employee's name: " SEARCHNAME
         grep -i "$SEARCHNAME" HRDatabase/Active/employees.txt
+        MENUP=0
     elif [ $MENUP == 4 ]; then
         echo "$LINEBREAK"
         echo "Action Log"
         echo "$LINEBREAK"
         # code to display action log
-        cat HRDatabase/Logs/action_log.txt
+        cat HRDatabase/Logs/actions.txt
+        MENUP=0
 
     elif [ $MENUP == 10 ]; then
         echo "$LINEBREAK"
         echo "Employee Main Menu"
         echo "$LINEBREAK"
-        echo "1) View Personal Information
-        2) View Payroll Information
-        3) Change Password
-        4) Logout
-        5) Exit"
+        echo -e "1) View Personal Information\n2) View Payroll Information\n3) Change Password\n4) Logout\n5) Exit"
         echo "$LINEBREAK"
         read -p "Please select an option: " MENUP2
 
