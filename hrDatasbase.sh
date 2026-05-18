@@ -209,7 +209,7 @@ while [ $ACTIVE == "true" ]; do
             TEMPPASS="Temp$IDNUM"
             echo "$EMPID:$TEMPPASS:EMPLOYEE" >> HRDatabase/Auth/employee_accounts.txt
 
-            # increment id counter
+            # increment id counter - otherwise if two john doe's exist, there's a chance they may have the same employee id
             NEXTID=$((IDNUM + 1))
             echo "$NEXTID" > HRDatabase/Logs/next_id.txt
 
