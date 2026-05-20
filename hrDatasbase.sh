@@ -10,6 +10,8 @@
 # 12 = Employee payroll information
 # 99 = Exit
 
+# This is an example
+
 MENUP=-1
 ACTIVE="true"
 USERTYPE="nil"
