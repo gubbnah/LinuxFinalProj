@@ -14,6 +14,9 @@ MENUP=-1
 ACTIVE="true"
 USERTYPE="nil"
 LINEBREAK="------------------------------"
+# wow
+# more text
+# this is another eample
 
 if [ ! -d "HRDatabase" ]; then
     # create database directories
