@@ -1,7 +1,8 @@
 #!/bin/bash
+
 # -1 = Login menu
 # 0  = HR main menu
-# 1  = Add / remove employee menu
+# 1  = Add employee menu
 # 2  = Modify employee menu
 # 3  = Search employee menu
 # 4  = View action log
@@ -54,7 +55,7 @@ while [ $ACTIVE == "true" ]; do
     # hr main menu
     elif [ $MENUP == 0 ]; then
         echo -e "$LINEBREAK\nHR Main Menu\n$LINEBREAK"
-        echo -e "1) Add / Remove Employee\n2) Modify Employee\n3) Search Employee\n4) View Action Log\n5) Manage HR Accounts\n6) Generate Report\n7) Logout\n8) Exit"
+        echo -e "1) Add Employee\n2) Modify Employee\n3) Search Employee\n4) View Action Log\n5) Manage HR Accounts\n6) Generate Report\n7) Logout\n8) Exit"
         echo "$LINEBREAK"
         read -p "Please select an option: " MENUP
         if [ $MENUP == 7 ]; then
@@ -69,7 +70,7 @@ while [ $ACTIVE == "true" ]; do
         fi
     # add / remove employee menu
     elif [ $MENUP == 1 ]; then
-        echo -e "$LINEBREAK\nAdd / Remove Employee Menu\n$LINEBREAK\n1) Add Employee\n2) Remove Employee\n3) Back to Main Menu\n$LINEBREAK"
+        echo -e "$LINEBREAK\nAdd Employee Menu\n$LINEBREAK\n1) Add Employee\n2) Back to Main Menu\n$LINEBREAK"
         read -p "Please select an option: " MENUP2
 
         # add employee
@@ -183,7 +184,7 @@ while [ $ACTIVE == "true" ]; do
 
             # write employee record
             echo "==============================" > HRDatabase/Active/$EMPID.txt
-            echo "        EMPLOYEE RECORD" >> HRDatabase/Active/$EMPID.txt
+            echo -e "\tEMPLOYEE RECORD" >> HRDatabase/Active/$EMPID.txt
             echo "==============================" >> HRDatabase/Active/$EMPID.txt
             echo "" >> HRDatabase/Active/$EMPID.txt
             echo "Employee ID: $EMPID" >> HRDatabase/Active/$EMPID.txt
@@ -219,62 +220,7 @@ while [ $ACTIVE == "true" ]; do
             echo "Temporary Password: $TEMPPASS"
             echo "$LINEBREAK"
             echo "$(date '+%Y-%m-%d %H:%M') - $USERNAME - ADDED EMPLOYEE - $EMPID - $FIRSTNAME $LASTNAME" >> HRDatabase/Logs/actions.txt
-            
-        # remove employee
         elif [ $MENUP2 == 2 ]; then
-            echo -e "$LINEBREAK\nRemove Employee\n$LINEBREAK"
-            read -p "Search by first name, last name, or username: " SEARCHTERM
-            grep -ril "$SEARCHTERM" HRDatabase/Active/ > HRDatabase/Logs/search_results.txt
-            RESULTCOUNT=$(wc -l < HRDatabase/Logs/search_results.txt)
-
-            if [ $RESULTCOUNT == 0 ]; then
-                echo "No employees found matching '$SEARCHTERM'."
-            elif [ $RESULTCOUNT == 1 ]; then
-                TARGETFILE=$(head -n 1 HRDatabase/Logs/search_results.txt)
-                REMOVEDNAME=$(grep "Name:" "$TARGETFILE" | tr ':' '\n' | tail -n 1)
-                echo "Found employee:"
-                cat "$TARGETFILE"
-                echo ""
-                read -p "Are you sure you want to remove this employee? (y/n): " CONFIRMED
-                if [ "$CONFIRMED" == "y" ]; then
-                    mv "$TARGETFILE" HRDatabase/Terminated/
-                    echo "Employee removed successfully."
-                    echo "$(date '+%Y-%m-%d %H:%M') - $USERNAME - REMOVED EMPLOYEE -$REMOVEDNAME" >> HRDatabase/Logs/actions.txt
-                else
-                    echo "Removal cancelled."
-                fi
-            else
-                echo "Multiple employees found:"
-                echo "$LINEBREAK"
-                LINENUM=1
-                while [ $LINENUM -le $RESULTCOUNT ]; do
-                    FILEPATH=$(head -n $LINENUM HRDatabase/Logs/search_results.txt | tail -n 1)
-                    EMPNAME=$(grep "Name:" "$FILEPATH")
-                    echo "$LINENUM) $EMPNAME"
-                    LINENUM=$((LINENUM + 1))
-                done
-                echo "$LINEBREAK"
-                read -p "Select an employee by number: " SELECTION
-                TARGETFILE=$(head -n $SELECTION HRDatabase/Logs/search_results.txt | tail -n 1)
-                if [ -z "$TARGETFILE" ]; then
-                    echo "Invalid selection."
-                else
-                    echo "Selected employee:"
-                    cat "$TARGETFILE"
-                    echo ""
-                    REMOVEDNAME=$(grep "Name:" "$TARGETFILE" | tr ':' '\n' | tail -n 1)
-                    read -p "Are you sure you want to remove this employee? (y/n): " CONFIRMED
-                    if [ "$CONFIRMED" == "y" ]; then
-                        mv "$TARGETFILE" HRDatabase/Terminated/
-                        echo "Employee removed successfully."
-                        echo "$(date '+%Y-%m-%d %H:%M') - $USERNAME - REMOVED EMPLOYEE -$REMOVEDNAME" >> HRDatabase/Logs/actions.txt
-                    else
-                        echo "Removal cancelled."
-                    fi
-                fi
-            fi
-            rm -f HRDatabase/Logs/search_results.txt
-        elif [ $MENUP2 == 3 ]; then
             MENUP=0
         fi
         
@@ -553,16 +499,16 @@ while [ $ACTIVE == "true" ]; do
 
         # build report
         echo "$LINEBREAK" > "$REPORTFILE"
-        echo "        HR PAYROLL REPORT" >> "$REPORTFILE"
-        echo "   Generated: $(date '+%Y-%m-%d %H:%M')" >> "$REPORTFILE"
-        echo "   Generated by: $USERNAME" >> "$REPORTFILE"
+        echo -e "\tHR PAYROLL REPORT" >> "$REPORTFILE"
+        echo -e "\tGenerated: $(date '+%Y-%m-%d %H:%M')" >> "$REPORTFILE"
+        echo -e "\tGenerated by: $USERNAME" >> "$REPORTFILE"
         echo "$LINEBREAK" >> "$REPORTFILE"
         echo "" >> "$REPORTFILE"
         echo "Total Active Employees: $TOTALACTIVE" >> "$REPORTFILE"
         echo "Total Terminated Employees: $TOTALTERMINATED" >> "$REPORTFILE"
         echo "" >> "$REPORTFILE"
         echo "$LINEBREAK" >> "$REPORTFILE"
-        echo "         PAYROLL SUMMARY" >> "$REPORTFILE"
+        echo -e "\tPAYROLL SUMMARY" >> "$REPORTFILE"
         echo "$LINEBREAK" >> "$REPORTFILE"
         echo "" >> "$REPORTFILE"
         echo "Total Annual Payroll: $TOTALPAYROLL" >> "$REPORTFILE"
@@ -570,7 +516,7 @@ while [ $ACTIVE == "true" ]; do
         echo "Average Salary: $AVGSALARY" >> "$REPORTFILE"
         echo "" >> "$REPORTFILE"
         echo "$LINEBREAK" >> "$REPORTFILE"
-        echo "      DEPARTMENT BREAKDOWN" >> "$REPORTFILE"
+        echo -e "\tDEPARTMENT BREAKDOWN" >> "$REPORTFILE"
         echo "$LINEBREAK" >> "$REPORTFILE"
         echo "" >> "$REPORTFILE"
 
@@ -610,7 +556,7 @@ while [ $ACTIVE == "true" ]; do
 
         echo "" >> "$REPORTFILE"
         echo "$LINEBREAK" >> "$REPORTFILE"
-        echo "       ACTIVE EMPLOYEE ROSTER" >> "$REPORTFILE"
+        echo -e "\tACTIVE EMPLOYEE ROSTER" >> "$REPORTFILE"
         echo "$LINEBREAK" >> "$REPORTFILE"
         echo "" >> "$REPORTFILE"
 
@@ -723,7 +669,7 @@ while [ $ACTIVE == "true" ]; do
         NETPAY=$(echo "scale=2; $NETPAY / 1" | bc)
 
         echo "$LINEBREAK"
-        echo "       PAYROLL INFORMATION"
+        echo -e "\tPAYROLL INFORMATION"
         echo -e "$LINEBREAK\n"
         echo "Salary: $SALARY"
         echo "Pay Type: $PAYTYPE ($PERIOD)"
