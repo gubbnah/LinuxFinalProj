@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # -1 = Login menu
 # 0  = HR main menu
 # 1  = Add employee menu
